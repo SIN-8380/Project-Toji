@@ -9,12 +9,12 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/public/images/fitness.png",
+      "src": "public/images/fitness.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/public/images/fitness.png",
+      "src": "public/images/fitness.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -27,7 +27,7 @@
       "url": "./index.html",
       "icons": [
         {
-          "src": "/public/images/fitness.png",
+          "src": "public/images/fitness.png",
           "sizes": "192x192"
         }
       ]
