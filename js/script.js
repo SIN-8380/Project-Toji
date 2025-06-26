@@ -4,7 +4,7 @@
     let playIndex = 0;
     let currentSet = 1;
     let playTimerInterval = null;
-    new Audio('/Project-Toji/public/sounds/timer.wav');
+    const timerBeep = new Audio('public/sounds/timer.wav');
 
 
 
