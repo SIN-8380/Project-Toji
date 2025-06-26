@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/script.js" defer></script>
+<link rel="stylesheet" href="css/style.css">
+  <title>server.xeno.type0</title>
+</head>
+<body>
+
+<!--App Wrapper -->
+  <div id="app">
+  
+<!-- 🔝 Header with Date and Settings -->
+    <header>
+    <div id="dateDisplay"></div>
+   <button class="btn" aria-label="Settings" style="padding: 0.5rem 0.6rem;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="#FAF3E1" viewBox="0 0 24 24">
+    <path d="M12 15.5c1.93 0 3.5-1.57 3.5-3.5s-1.57-3.5-3.5-3.5-3.5 1.57-3.5 3.5 1.57 3.5 3.5 3.5zm7.03-2.53c.03-.32.05-.66.05-1s-.02-.68-.05-1l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.58-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46c-.13.22-.07.5.12.64l2.11 1.65c-.03.32-.05.66-.05 1s.02.68.05 1L2.1 14.65a.5.5 0 0 0-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.58 1.69-.98l2.49 1c.22.09.49 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.65z" />
+  </svg>
+</button>
+  </header>
+
+<!-- 📦 Workout Boxes Container -->
+  <div class="workout-container" id="workoutContainer"></div>
+  <button class="floating-btn" onclick="openAddWorkoutModal()">+</button>
+
+<button class="floating-btn-profile" onclick="openProfileScreen()">●⁠_⁠⁠●</button>
+
+
+
+  <div class="modal" id="addBoxModal">
+    <div class="modal-content">
+      <h3>New Workout Box</h3>
+<input type="text" id="newBoxName" placeholder="Workout Box Name">
+<input type="number" id="prepTimeInput" placeholder="Prep Time (seconds)" min="0" />
+      <button class="btn" onclick="createWorkoutBox()">Create</button>
+      <button class="btn" onclick="closeModal('addBoxModal')">Cancel</button>
+    </div>
+  </div>
+  <div id="playScreen">
+    <div id="playHeader" onclick="exitPlayMode()">← Back</div>
+    <div id="playContent">
+      <h2 id="playExerciseName"></h2>
+      <p id="playExerciseDetails"></p>
+      <h1 id="playTimer"></h1>
+    </div>
+    <div id="playFooter">
+      <button class="btn" onclick="nextSetOrExercise()">Next ▶</button>
+    </div>
+  </div>
+  <!-- Inject edit functionality modals -->  <div class="modal" id="editOptionsModal">
+    <div class="modal-content">
+      <h3>Edit Workout Box</h3>
+      <button class="btn" onclick="openAddExerciseModal()">Add Exercise</button>
+      <button class="btn" onclick="openEditBoxModal()">Edit Whole Box</button>
+      <button class="btn" onclick="closeModal('editOptionsModal')">Cancel</button>
+    </div>
+  </div>
+  <div class="modal" id="addExerciseModal">
+    <div class="modal-content">
+      <h3>Add Exercise</h3>
+      <input type="text" id="exName" placeholder="Exercise Name" />
+      <input type="number" id="exSet" placeholder="Set" min="1" />
+      <input type="number" id="exRep" placeholder="Rep (0 if timed)" min="0" />
+      <input type="number" id="exTime" placeholder="Time (sec)" min="0" />
+      <input type="number" id="exRest" placeholder="Rest between set (sec)" min="0" />
+      <input type="number" id="exRestBetween" placeholder="Rest Before Next Exercise (sec)" min="0" />
+      <button class="btn" onclick="saveNewExercise()">Save</button>
+      <button class="btn" onclick="closeModal('addExerciseModal')">Cancel</button>
+    </div>
+  </div>
+  <div class="modal" id="editBoxModal">
+    <div class="modal-content">
+      <h3>Edit Workout Box</h3>
+      <input type="text" id="editBoxName" />
+      <div id="editExerciseList"></div>
+      <button class="btn" onclick="closeModal('editBoxModal')">Done</button>
+     
+     
+      <button class="btn" onclick="deleteWorkoutBox()">Delete</button>
+      
+    </div>
+  </div>
+  </div>
+
+  
+<div id="settingsPage" style="display: none; height: 100vh;">
+  <div style="display: flex; height: 100%; width: 100%;">
+    <!-- Sidebar (30%) -->
+    <div style="flex: 0 0 20%; background-color: #1C1C1C; padding: 1rem; color: white;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Settings</h2>
+      <button class="btn setting-btn" onclick="showSettingsSection('signIn')">Sign In</button><br><br>
+      <button class="btn setting-btn" onclick="showSettingsSection('account')">Account</button><br><br>
+      <button class="btn danger" onclick="resetEverything()">⚠️ Reset Everything</button><br><br>
+      <button class="btn setting-btn" onclick="closeSettings()">← Back</button>
+    </div>
+    
+    <!-- Content Area (70%) -->
+    <div id="settingsContent" style="flex: 1; padding: 2rem; background-color: #2E2E2E; color: #FAF3E1;">
+      <h2>Welcome to Settings</h2>
+      <p>Select an option on the left.</p>
+    </div>
+  </div>
+</div>
+
+
+<div id="profilePage" class="profile-grid">
+  <div class="profile-header">
+    
+<div class="profile-header">
+  <button class="btn back-btn" onclick="closeProfileScreen()">
+    <svg width="20" height="20" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="2" y="2" width="20" height="20" rx="4" ry="4" stroke="goldenrod" />
+      <path d="M12 8l-4 4 4 4" stroke="goldenrod" />
+      <path d="M16 12H8" stroke="goldenrod" />
+    </svg>
+  </button>
+</div>
+
+  </div>  
+  
+  
+  <div class="profile-meta">
+  <div class="profile-top-row">
+    <div class="profile-pic-wrapper">
+      <img id="profilePic" src="/public/images/default.jpg" class="profile-pic" />
+      <input type="file" id="avatarUpload" accept="image/*" class="hidden-input" />
+    </div>
+    <div class="profile-name">
+      <h2 class="editable-name">
+        <span id="profileNameDisplay">user-sample</span>
+        <input id="profileNameInput" type="text" maxlength="18" />
+      </h2>
+      <p>Rank: <strong>Elite</strong></p>
+    </div>
+  </div>
+  
+  <div class="profile-badges">🥇 🏅 🥇 🏅 🥇 🏅</div>
+</div>
+  
+  
+  
+  
+  
+  <hr class="profile-divider" />  <div class="profile-stats">
+    <div class="stat-row">
+      <span>Workouts Completed:</span>
+      <span><strong>34</strong></span>
+    </div>
+    <div class="stat-row">
+      <span>Current Streak:</span>
+      <span><strong>7 Days</strong></span>
+    </div>
+    <div class="stat-row">
+      <span>Last Workout:</span>
+      <span><strong>June 23, 2025</strong></span>
+    </div>
+    <div class="stat-row">
+      <span>Total Workout Boxes:</span>
+      <span><strong id="totalBoxes">0</strong></span>
+    </div>
+  </div>
+  <div class="profile-chart">
+  <canvas id="workoutChart" width="400" height="200"></canvas>
+</div>
+</div>
+
+
+
+  </body>
+  </html>
